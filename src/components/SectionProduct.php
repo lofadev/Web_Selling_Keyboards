@@ -41,7 +41,7 @@ function renderSectionProduct($maloai, $title)
                   </div>
                   <div class="cart-concern position-absolute position-bottom">
                     <div class="cart-button d-flex">
-                      <a href="themhangController?msp=<%=sp.getMaSP()%>" class="btn btn-medium btn-black"> Thêm <svg class="cart-outline">
+                      <a href="src/controllers/CartController.php?masp=<?php print $product['MaSP'] ?>&action=add" class="btn btn-medium btn-black"> Thêm <svg class="cart-outline">
                           <use xlink:href="#cart-outline"></use>
                         </svg>
                       </a>

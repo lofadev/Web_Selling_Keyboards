@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 function getAllProducts()
 {
   include '../src/utils/connecting.php';
@@ -9,6 +10,24 @@ function getAllProducts()
     $product_list = $getProducts->fetchAll();
 
     return $product_list;
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  } finally {
+    $pdo = null;
+  }
+}
+
+function getProductByProductID($id)
+{
+  include '../utils/connecting.php';
+  try {
+    $getProducts = $pdo->prepare("SELECT * FROM sanpham where masp = :msp");
+
+    $getProducts->bindParam(':msp', $id);
+    $getProducts->execute();
+    $product = $getProducts->fetch();
+
+    return $product;
   } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
   } finally {
@@ -72,6 +91,7 @@ function getTotalPageByType($maloai)
 }
 
 
+
 function generateHashPassword($password)
 {
   $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -87,13 +107,104 @@ function verifyPassword($passwordEntered, $hashedPassword)
 function getUser($username, $password)
 {
   include 'src/utils/connecting.php';
-  $sql = "SELECT * FROM khachhang WHERE taikhoan = ? AND matkhau = ?";
-  $getUser = $pdo->prepare($sql);
-  $getUser->execute(array($username, $password));
-  $user = $getUser->fetch(PDO::FETCH_OBJ);
-  if ($user > 0) {
+
+  try {
+    $sql = "SELECT * FROM khachhang WHERE taikhoan = :taikhoan AND matkhau = :matkhau";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(':taikhoan', $username);
+    $stmt->bindParam(':matkhau', $password);
+
+    $stmt->execute();
+
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  } finally {
     $pdo = null;
-    return $user;
   }
-  return null;
+}
+
+function getLichSu($userId)
+{
+  include 'src/utils/connecting.php';
+
+  try {
+    $sql = "select MaCTHD, TenSP, cthd.SoLuong, Gia, Anh, NgayDatHang, cthd.DaMua
+    from chitiethoadon as cthd 
+      inner join sanpham as sp on cthd.MaSP=sp.MaSP
+      inner join hoadon as hd on hd.MaHD = cthd.MaHD
+    where MaKH = :makh";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(':makh', $userId);
+
+    $stmt->execute();
+
+    $result = $stmt->fetchAll();
+    return $result;
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  } finally {
+    $pdo = null;
+  }
+}
+
+function themHoaDon($makh, $ngaydathang, $noigiaohang)
+{
+  include '../utils/connecting.php';
+
+  try {
+    $sql = "insert into hoadon(makh, ngaydathang, noigiaohang, damua) values(:makh, :ngaydathang, :noigiaohang, 0)";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(':makh', $makh);
+    $stmt->bindParam(':ngaydathang', $ngaydathang);
+    $stmt->bindParam(':noigiaohang', $noigiaohang);
+
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  } finally {
+    $pdo = null;
+  }
+}
+
+function getMaxHD()
+{
+  include '../utils/connecting.php';
+
+  try {
+    $sql = "select max(mahd) from hoadon";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $maxhd = $stmt->fetchColumn();
+    return $maxhd;
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  } finally {
+    $pdo = null;
+  }
+}
+
+function themChitietHD($mahd, $masp, $soluong)
+{
+  include '../utils/connecting.php';
+
+  try {
+    $sql = "insert into chitiethoadon(mahd, masp, soluong, damua) values(:mahd, :masp, :soluong, 0)";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(':mahd', $mahd);
+    $stmt->bindParam(':masp', $masp);
+    $stmt->bindParam(':soluong', $soluong);
+
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  } finally {
+    $pdo = null;
+  }
 }

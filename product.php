@@ -46,7 +46,7 @@ $totalPage = getTotalPageByType(isset($_GET['search']) ? $searchMap[$_GET['searc
   <main class="content">
     <?php
     include 'src/components/ProductCategory.php';
-    renderProductCategory($product_list, $searchMap[$_GET['search']] ?? "", ceil($totalPage / 8));
+    renderProductCategory($product_list, isset($_GET['search']) ? $searchMap[$_GET['search']] : "", ceil($totalPage / 8));
     ?>
   </main>
 

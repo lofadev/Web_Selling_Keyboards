@@ -2,7 +2,10 @@
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-$totalCost = 0;
+if (!isset($_SESSION['user'])) {
+  header('Location: signin.php');
+  return;
+}
 ?>
 
 <!DOCTYPE html>
@@ -40,76 +43,67 @@ $totalCost = 0;
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-md-6 text-center mb-4">
-              <h2 class="heading-section">Giỏ hàng</h2>
+              <h2 class="heading-section">Lịch sử mua hàng</h2>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
-              <h3 class="h5 mb-4 text-center">Danh sách sản phẩm hiện có
-                trong giỏ hàng</h3>
+              <h3 class="h5 mb-4 text-center">Danh sách các mặt hàng mà bạn đã đặt</h3>
               <div class="table-wrap">
 
-                <form action="suaghController" id="form-cart-delete"></form>
+                <form action="suaghController" id="form-history-delete"></form>
                 <table class="table">
                   <thead class="thead-primary">
                     <tr>
-                      <th><input class="btn btn-danger" type="submit" name="btnxoachon" value="Xóa chọn" form="form-cart-delete"></th>
                       <th>STT</th>
                       <th>Ảnh</th>
                       <th>Tên sản phẩm</th>
                       <th>Giá</th>
                       <th>Số lượng</th>
                       <th>Thành tiền</th>
-                      <th>&nbsp;</th>
+                      <th>Trạng thái</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
-                    if (!isset($_SESSION['cart'])) {
+
+                    include './src/utils/functions.php';
+                    $historys = getLichSu($_SESSION['user']['MaKH']);
+                    if (count($historys) == 0) {
                     ?>
                       <tr>
-                        <td class="text-center h1" colspan="8">Bạn chưa có sản
-                          phẩm nào trong giỏ hàng. Vui lòng mua hàng <a href="product.php" class="text-primary">tại đây</a>
+                        <td class="text-center h1" colspan="8">Bạn chưa mua sản phẩm nào. Vui lòng mua hàng <a href="product.php" class="text-primary">tại đây</a>
                         </td>
                       </tr>
                       <?php
                     } else {
                       $i = 1;
-                      $carts = $_SESSION['cart'];
-                      foreach ($carts as $cart) {
-                        $formatedPrice = number_format($cart['Gia'], 0, ',', '.') . 'đ';
-                        $formatedTotalPrice = number_format($cart['Gia'] * $cart['SoLuong'], 0, ',', '.') . 'đ';
-                        $totalCost += $cart['Gia'] * $cart['SoLuong'];
+                      foreach ($historys as $history) {
+                        $formatedPrice = number_format($history['Gia'], 0, ',', '.') . 'đ';
+                        $formatedTotalPrice = number_format($history['Gia'] * $history['SoLuong'], 0, ',', '.') . 'đ';
                       ?>
                         <tr class="alert" role="alert">
-                          <td><input type="hidden" name="masp" value="<?php print $cart['MaSP'] ?>"> <label class="checkbox-wrap checkbox-primary"> <input name="checkboxes" type="checkbox" form="form-cart-delete" /> <span class="checkmark"></span>
-                            </label></td>
                           <td><span><?php print $i++ ?></span></td>
                           <td>
-                            <div class="img" style="background-image: url(public/<?php print $cart['Anh'] ?>)"></div>
+                            <div class="img" style="background-image: url(public/<?php print $history['Anh'] ?>)"></div>
                           </td>
                           <td>
                             <div class="product">
-                              <span><?php print $cart['TenSP'] ?> </span>
+                              <span><?php print $history['TenSP'] ?> </span>
                             </div>
                           </td>
                           <td><?php print $formatedPrice ?></td>
 
                           <td class="quantity">
-                            <form action="./src/controllers/CartController.php" method="get">
-                              <input type="hidden" name="masp" value="<?php print $cart['MaSP'] ?>">
-                              <div class="input-group">
-
-                                <input type="number" name="sl" class="quantity form-control input-number" value="<?php print $cart['SoLuong'] ?>" min="1" max="100" autocomplete="off" />
-                              </div>
-                              <button class="w-100" type="submit" name="action" value="update">
-                                <i class="fa fa-check"></i>
-                              </button>
-                            </form>
+                            <?php print $history['SoLuong'] ?>
                           </td>
                           <td><?php print $formatedTotalPrice ?></td>
-                          <td><a href="./src/controllers/CartController.php?masp=<?php print $cart['MaSP'] ?>&action=delete" class="close"> <span aria-hidden="true"><i class="fa fa-close"></i></span>
-                            </a></td>
+                          <td><?php if ($history['DaMua'] == 1) { ?>
+                              <span class="text-success">Đã xác nhận</span>
+                            <?php } else { ?>
+                              <span class="text-primary">Đang chờ...</span>
+                            <?php } ?>
+                          </td>
                         </tr>
 
                     <?php }
@@ -121,33 +115,12 @@ $totalCost = 0;
             </div>
           </div>
 
-          <div>
-
-
-
-            <h2 class="text-right mt-2">
-              <span>Tổng tiền: </span> <span><?php print number_format($totalCost, 0, ',', '.') . 'đ';  ?></span>
-            </h2>
-
-            <div class="text-right">
-              <button onclick="handlePayment()" class="btn btn-primary">Thanh Toán</button>
-            </div>
-
-
-            <div class="text-center">
-              <a href="product.php" class="btn btn-primary">Tiếp tục
-                mua hàng</a>
-            </div>
+          <div class="text-center mt-4">
+            <a href="product.php" class="btn btn-primary">Tiếp tục
+              mua hàng</a>
           </div>
         </div>
       </section>
-
-      <script>
-        const handlePayment = () => {
-          const noigiaohang = prompt("Vui lòng nhập nơi giao hàng");
-          window.location.href = "./src/controllers/PaymentController.php?noigiaohang=" + noigiaohang;
-        };
-      </script>
     </main>
   </main>
 

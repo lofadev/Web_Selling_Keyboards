@@ -1,3 +1,8 @@
+<?php
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,11 +49,11 @@
                   <tr>
                     <th>STT</th>
                     <th>Ảnh</th>
-                    <th>Mã sản phẩm</th>
                     <th>Tên sản phẩm</th>
                     <th>Giá</th>
                     <th>Số lượng</th>
                     <th>Thương hiệu</th>
+                    <th width="15%">Cập nhật</th>
                     <th>&nbsp;</th>
                   </tr>
                 </thead>
@@ -59,33 +64,33 @@
                   $product_list = getAllProducts();
                   $i = 1;
                   foreach ($product_list as $product) {
+                    $formatedPrice = number_format($product['Gia'], 0, ',', '.') . 'đ';
                   ?>
                     <tr class="alert" role="alert">
                       <td><span><?php print $i++ ?></span></td>
                       <td>
                         <div class="img" style="background-image: url(../public/<?php print $product['Anh'] ?>)"></div>
                       </td>
-                      <td><span><?php print $product['MaSP'] ?></span></td>
                       <td>
                         <div class="product">
                           <span><?php print $product['TenSP'] ?></span>
                         </div>
                       </td>
-                      <td><?php print $product['Gia'] ?></td>
+                      <td><?php print $formatedPrice ?></td>
 
                       <td class="quantity">
-                        <form action="adminController" method="post">
-                          <input type="hidden" name="msp" value="<%=sp.getMaSP()%>">
+                        <form action="./controllers/productController.php" method="get">
+                          <input type="hidden" name="masp" value="<?php print $product['MaSP'] ?>">
                           <div class="input-group">
-
-                            <input type="number" name="txtsl" class="quantity form-control input-number" value="<?php print $product['SoLuong'] ?>" min="1" max="100" autocomplete="off" />
+                            <input type="number" name="sl" class="quantity form-control input-number" value="<?php print $product['SoLuong'] ?>" min="1" max="100" autocomplete="off" />
                           </div>
-                          <button class="w-100" type="submit" name="btncapnhat">
+                          <button class="w-100" type="submit" name="action" value="update_quantity">
                             <i class="fa fa-check"></i>
                           </button>
                         </form>
                       </td>
                       <td><?php print $product['ThuongHieu'] ?></td>
+                      <td><a href="updateProduct.php?masp=<?php print $product['MaSP'] ?>">Cập nhật</a></td>
                       <td>
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -103,13 +108,13 @@
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
 
-                                <button type="submit" class="btn btn-danger">Xóa</button>
+                                <button type="submit" class="btn btn-danger" onclick="handleRemoveProduct()">Xóa</button>
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        <button class=" close" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                        <button class="close" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="handleSaveMsp(<?php print $product['MaSP'] ?>)">
                           <span aria-hidden="true"><i class="fa fa-close"></i></span>
                         </button>
                       </td>
@@ -125,15 +130,25 @@
     </section>
   </main>
 
-  <script src="public/js/jquery.min.js"></script>
-  <script src="public/js/popper.js"></script>
-  <script src="public/js/bootstrap.min.js"></script>
-  <script src="public/js/main.js"></script>
-  <script src="public/js/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript">
+    const handleSaveMsp = (msp) => {
+      localStorage.setItem("masp", msp);
+    };
+
+    const handleRemoveProduct = () => {
+      const msp = localStorage.getItem("masp");
+      window.location.href = "./controllers/productController.php?masp=" + msp + "&action=delete";
+    };
+  </script>
+  <script src="../public/js/jquery.min.js"></script>
+  <script src="../public/js/popper.js"></script>
+  <script src="../public/js/bootstrap.min.js"></script>
+  <script src="../public/js/main.js"></script>
+  <script src="../public/js/jquery-1.11.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-  <script type="text/javascript" src="public/js/bootstrap.bundle.min.js"></script>
-  <script type="text/javascript" src="public/js/plugins.js"></script>
-  <script type="text/javascript" src="public/js/script.js"></script>
+  <script type="text/javascript" src="../public/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="../public/js/plugins.js"></script>
+  <script type="text/javascript" src="../public/js/script.js"></script>
 </body>
 
 </html>
