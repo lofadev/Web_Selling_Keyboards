@@ -8,8 +8,16 @@ $searchMap = [
   'switch' => 'l3',
   'phukien' => 'l4',
 ];
+$product_list = getProductByTypeandPage("", isset($_GET['page']) ? $_GET['page'] : 1);
 
-$product_list = getProductByTypeandPage(isset($_GET['search']) ? $searchMap[$_GET['search']] : "", isset($_GET['page']) ? $_GET['page'] : 1);
+if (isset($_GET['search'])) {
+  $product_list = getProductByTypeandPage($searchMap[$_GET['search']], isset($_GET['page']) ? $_GET['page'] : 1);
+}
+
+if (isset($_GET['txtSearch'])) {
+  $product_list = getProductbyKey($_GET['txtSearch']);
+}
+
 $totalPage = getTotalPageByType(isset($_GET['search']) ? $searchMap[$_GET['search']] : "");
 ?>
 
@@ -46,7 +54,7 @@ $totalPage = getTotalPageByType(isset($_GET['search']) ? $searchMap[$_GET['searc
   <main class="content">
     <?php
     include 'src/components/ProductCategory.php';
-    renderProductCategory($product_list, isset($_GET['search']) ? $searchMap[$_GET['search']] : "", ceil($totalPage / 8));
+    renderProductCategory($product_list, isset($_GET['search']) ? $searchMap[$_GET['search']] : "", !isset($_GET['txtSearch']) ? ceil($totalPage / 8) : 0);
     ?>
   </main>
 

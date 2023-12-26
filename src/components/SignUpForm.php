@@ -9,31 +9,31 @@
 
                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Đăng ký</p>
 
-                <form class="mx-1 mx-md-4" action="dangkyController" method="post">
+                <form class="mx-1 mx-md-4" action="./src/controllers/UserSignUpController.php" method="post">
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <div class="form-outline flex-fill mb-0">
-                      <input type="text" id="form3Example1c" class="form-control" name="txthoten" />
+                      <input type="text" id="form3Example1c" class="form-control" name="fullName" />
                       <label class="form-label" for="form3Example1c">Họ và tên</label>
                     </div>
                   </div>
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <div class="form-outline flex-fill mb-0">
-                      <input type="text" id="form3Example3c" class="form-control" name="txtun" />
+                      <input type="text" id="form3Example3c" class="form-control" name="username" />
                       <label class="form-label" for="form3Example3c">Tài khoản</label>
                     </div>
                   </div>
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <div class="form-outline flex-fill mb-0">
-                      <input type="password" id="form3Example4c" class="form-control" name="txtpass" /> <label class="form-label" for="form3Example4c">Mật khẩu</label>
+                      <input type="password" id="form3Example4c" class="form-control" name="password" /> <label class="form-label" for="form3Example4c">Mật khẩu</label>
                     </div>
                   </div>
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <div class="form-outline flex-fill mb-0">
-                      <input type="password" id="form3Example4cd" class="form-control" name="txtconfirmpass" /> <label class="form-label" for="form3Example4cd">Xác nhận mật khẩu</label>
+                      <input type="password" id="form3Example4cd" class="form-control" name="confirmPassword" /> <label class="form-label" for="form3Example4cd">Xác nhận mật khẩu</label>
                     </div>
                   </div>
 

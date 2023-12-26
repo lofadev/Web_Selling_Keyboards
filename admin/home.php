@@ -13,7 +13,7 @@ ini_set('display_errors', 1);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>Trang chủ | admin</title>
+  <title>Quản lý sản phẩm | admin</title>
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -42,6 +42,8 @@ ini_set('display_errors', 1);
           <div class="col-md-12">
             <h4 class="h5 mb-4 text-center">Danh sách sản phẩm hiện có
               trong kho</h4>
+
+            <a href="./addProduct.php" class="btn btn-primary">Thêm sản phẩm</a>
             <div class="table-wrap">
 
               <table class="table">

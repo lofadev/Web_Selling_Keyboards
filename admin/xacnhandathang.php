@@ -13,7 +13,7 @@ ini_set('display_errors', 1);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>Trang chủ | admin</title>
+  <title>Xác nhận đơn hàng | admin</title>
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -60,7 +60,7 @@ ini_set('display_errors', 1);
                 </thead>
                 <tbody>
                   <?php
-                  include '../utils/functions.php';
+                  include './utils/functions.php';
                   $accepts = getXacnhan();
                   $i = 1;
                   foreach ($accepts as $accept) {
@@ -93,10 +93,15 @@ ini_set('display_errors', 1);
                         <?php print $accept['NoiGiaoHang'] ?>
                       </td>
                       <td>
-                        <a href="" class="text-primary">Xác nhận</a>
+                        <?php
+                        if ($accept['DaMua'] == 0) { ?>
+                          <a href="./controllers/xacnhandathangController.php?action=xacnhan&macthd=<?php print $accept['MaCTHD'] ?>" class="text-primary">Xác nhận</a>
+                        <?php } else { ?>
+                          <a href="./controllers/xacnhandathangController.php?action=huyxacnhan&macthd=<?php print $accept['MaCTHD'] ?>" class="text-warning">Hủy xác nhận</a>
+                        <?php }  ?>
                       </td>
                       <td>
-                        <a href="" class="text-danger">Hủy</a>
+                        <a href="./controllers/xacnhandathangController.php?action=huy&macthd=<?php print $accept['MaCTHD'] ?>" class="text-danger">Hủy</a>
                       </td>
                     </tr>
                   <?php } ?>

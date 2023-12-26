@@ -70,7 +70,7 @@
 
 <div class="search-popup">
   <div class="search-popup-container">
-    <form role="search" method="get" class="search-form" action="product">
+    <form role="search" method="get" class="search-form" action="product.php">
       <input type="search" id="search-form" class="search-field" placeholder="Nhập từ khóa cần tìm kiếm ở đây..." value="" name="txtSearch" />
       <button type="submit" class="search-submit">
         <svg class="search">

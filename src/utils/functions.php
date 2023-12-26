@@ -5,7 +5,7 @@ function getAllProducts()
 {
   include '../src/utils/connecting.php';
   try {
-    $getProducts = $pdo->prepare("SELECT * FROM sanpham");
+    $getProducts = $pdo->prepare("SELECT * FROM sanpham order by masp desc");
     $getProducts->execute();
     $product_list = $getProducts->fetchAll();
 
@@ -28,6 +28,28 @@ function getProductByProductID($id)
     $product = $getProducts->fetch();
 
     return $product;
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  } finally {
+    $pdo = null;
+  }
+}
+
+function getProductByKey($txtSearch)
+{
+  include './src/utils/connecting.php';
+
+  try {
+    $query = "SELECT * FROM sanpham WHERE tensp LIKE :txtSearch";
+    $getProducts = $pdo->prepare($query);
+
+    $txtSearchParam = '%' . $txtSearch . '%';
+    $getProducts->bindParam(':txtSearch', $txtSearchParam);
+
+    $getProducts->execute();
+    $products = $getProducts->fetchAll();
+
+    return $products;
   } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
   } finally {
@@ -106,7 +128,7 @@ function verifyPassword($passwordEntered, $hashedPassword)
 
 function getUser($username, $password)
 {
-  include 'src/utils/connecting.php';
+  include '../utils/connecting.php';
 
   try {
     $sql = "SELECT * FROM khachhang WHERE taikhoan = :taikhoan AND matkhau = :matkhau";
@@ -119,6 +141,52 @@ function getUser($username, $password)
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result;
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  } finally {
+    $pdo = null;
+  }
+}
+
+function getUserbyUserName($username)
+{
+  include '../utils/connecting.php';
+
+  try {
+    $sql = "SELECT * FROM khachhang WHERE taikhoan = :taikhoan";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(':taikhoan', $username);
+
+    $stmt->execute();
+
+    $rowCount = $stmt->rowCount();
+    if ($rowCount > 0) {
+      $result = $stmt->fetch();
+      return $result;
+    } else {
+      return null;
+    }
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  } finally {
+    $pdo = null;
+  }
+}
+
+function themKhachhang($hoten, $taikhoan, $matkhau)
+{
+  include '../utils/connecting.php';
+
+  try {
+    $sql = "insert into khachhang(hoten, taikhoan, matkhau) values(:hoten, :taikhoan, :matkhau)";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(':hoten', $hoten);
+    $stmt->bindParam(':taikhoan', $taikhoan);
+    $stmt->bindParam(':matkhau', $matkhau);
+
+    $stmt->execute();
   } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
   } finally {

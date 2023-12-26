@@ -28,10 +28,20 @@ function renderProductCategory($product_list, $type, $totalPage)
             </a>
           </div>
 
+          <?php
+          if (count($product_list) == 0) {
+            print "<script>
+            alert('Không có kết quả tìm kiếm nào phù hợp...');
+            window.location.href='./product.php';
+            </script>";
+          }
+          ?>
+
         </div>
 
         <div class="product-content">
           <?php
+
           foreach ($product_list as $product) {
             $formatedPrice = number_format($product['Gia'], 0, ',', '.') . ' đ';
           ?>
@@ -60,40 +70,44 @@ function renderProductCategory($product_list, $type, $totalPage)
         </div>
 
 
-        <nav aria-label="..." class="mt-5">
-          <ul class="pagination justify-content-center">
-            <?php
-            if (isset($_GET['page'])) {
-              $isDisPrev =  $_GET['page'] == 1 ? "disabled" : "";
-            } else {
-              $isDisPrev = "disabled";
-            }
-            $searchParam = isset($_GET['search']) ? '&search=' . $_GET['search'] : "";
-            ?>
-            <li class="page-item <?php print $isDisPrev ?>"><a class="page-link" href="product.php?page=<?php print isset($_GET['page']) && $_GET['page'] - 1 . $searchParam; ?>">Previous</a></li>
-            <?php
-            for ($i = 1; $i <= $totalPage; $i++) {
+        <?php
+        if ($totalPage) {
+        ?>
+          <nav aria-label="..." class="mt-5">
+            <ul class="pagination justify-content-center">
+              <?php
               if (isset($_GET['page'])) {
-                $currentPage = $i == $_GET['page'] ? 'active' : "";
+                $isDisPrev =  $_GET['page'] == 1 ? "disabled" : "";
               } else {
-                $currentPage = $i == 1 ? 'active' : "";
+                $isDisPrev = "disabled";
               }
-            ?>
-              <li class="page-item <?php print $currentPage ?>"><a class="page-link" href="product.php?page=<?php print $i . $searchParam; ?>"><?php print $i ?></a></li>
-            <?php
-            }
-            ?>
+              $searchParam = isset($_GET['search']) ? '&search=' . $_GET['search'] : "";
+              ?>
+              <li class="page-item <?php print $isDisPrev ?>"><a class="page-link" href="product.php?page=<?php print isset($_GET['page']) && $_GET['page'] - 1 . $searchParam; ?>">Previous</a></li>
+              <?php
+              for ($i = 1; $i <= $totalPage; $i++) {
+                if (isset($_GET['page'])) {
+                  $currentPage = $i == $_GET['page'] ? 'active' : "";
+                } else {
+                  $currentPage = $i == 1 ? 'active' : "";
+                }
+              ?>
+                <li class="page-item <?php print $currentPage ?>"><a class="page-link" href="product.php?page=<?php print $i . $searchParam; ?>"><?php print $i ?></a></li>
+              <?php
+              }
+              ?>
 
-            <?php
-            $page = null;
-            if (isset($_GET['page'])) {
-              $isDisNext =  $_GET['page'] == $totalPage ? "disabled" : "";
-              $page = $_GET['page'];
-            } else $page = 1;
-            ?>
-            <li class="page-item  <?php print $isDisNext ?>"><a class="page-link" href="product.php?page=<?php print $page + 1 . $searchParam; ?>">Next</a></li>
-          </ul>
-        </nav>
+              <?php
+              $page = null;
+              if (isset($_GET['page'])) {
+                $isDisNext =  $_GET['page'] == $totalPage ? "disabled" : "";
+                $page = $_GET['page'];
+              } else $page = 1;
+              ?>
+              <li class="page-item  <?php print $isDisNext ?>"><a class="page-link" href="product.php?page=<?php print $page + 1 . $searchParam; ?>">Next</a></li>
+            </ul>
+          </nav>
+        <?php } ?>
 
       </div>
     </div>

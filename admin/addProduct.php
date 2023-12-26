@@ -1,7 +1,7 @@
 <?php
 session_start();
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +10,7 @@ ini_set('display_errors', 1);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cập nhật sản phẩm | admin</title>
+  <title>Thêm sản phẩm | admin</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,11 +33,8 @@ ini_set('display_errors', 1);
 <body>
   <?php
   include './components/headeradmin.php';
-  include './utils/functions.php';
-  $masp = $_GET['masp'];
-  $product = getProductByProductID($masp);
   ?>
-  <section class="vh-100" style="background-color: #eee; padding-top: 90px;">
+  <section class="vh-100" style="background-color: #eee; padding-top: 30px;">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-lg-12 col-xl-11">
@@ -46,55 +43,67 @@ ini_set('display_errors', 1);
               <div class="row justify-content-center">
                 <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
 
-                  <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Cập
-                    nhật sản phẩm</p>
+                  <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Thêm
+                    sản phẩm</p>
 
-                  <form class="mx-1 mx-md-4" action="./controllers/productController.php" method="get">
-                    <input type="hidden" name="masp" value="<?php print $masp ?>">
+                  <form class="mx-1 mx-md-4" action="./controllers/productController.php" method="get" enctype="multipart/form-data">
+
+                    <div class="mb-4">
+                      <input class="form-control" type="file" id="formFile" name="anh"> <label for="formFile" class="form-label">Ảnh</label>
+                    </div>
 
                     <div class="d-flex flex-row align-items-center mb-4">
                       <div class="form-outline flex-fill mb-0">
-                        <input type="text" id="form3Example1c" class="form-control" name="tensp" value="<?php print $product['TenSP'] ?>" /> <label class="form-label" for="form3Example1c">Tên sản
-                          phẩm</label>
+                        <input type="text" id="form3Example1c" class="form-control" name="tensp" /> <label class="form-label" for="form3Example1c">Tên sản phẩm</label>
                       </div>
                     </div>
 
                     <div class="d-flex flex-row align-items-center mb-4">
                       <div class="form-outline flex-fill mb-0">
-                        <input type="text" id="form3Example3c" class="form-control" name="gia" value="<?php print intval($product['Gia']) ?>" /> <label class="form-label" for="form3Example3c">Giá</label>
+                        <input type="text" id="form3Example3c" class="form-control" name="gia" /> <label class="form-label" for="form3Example3c">Giá</label>
                       </div>
                     </div>
 
                     <div class="d-flex flex-row align-items-center mb-4">
                       <div class="form-outline flex-fill mb-0">
-                        <input type="text" id="form3Example4c" class="form-control" name="sl" value="<?php print $product['SoLuong'] ?>" /> <label class="form-label" for="form3Example4c">Số lượng</label>
+                        <input type="text" id="form3Example4c" class="form-control" name="sl" /> <label class="form-label" for="form3Example4c">Số lượng</label>
+                      </div>
+                    </div>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <div class="form-outline flex-fill mb-0">
+                        <select name="loai" class="form-select" aria-label="Default select example">
+                          <?php
+                          include './utils/functions.php';
+                          $loais = getLoai();
+                          foreach ($loais as $loai) {
+                          ?>
+                            <option value="<?php print $loai['MaLoai'] ?>"><?php print $loai['TenLoai'] ?></option>
+                          <?php
+                          }
+                          ?>
+                        </select>
+                        <label class="form-label" for="form3Example4c">Loại</label>
                       </div>
                     </div>
 
+
                     <div class="d-flex flex-row align-items-center mb-4">
                       <div class="form-outline flex-fill mb-0">
-                        <input type="text" id="form3Example4cd" class="form-control" name="th" value="<?php print $product['ThuongHieu'] ?>" /> <label class="form-label" for="form3Example4cd">Thương
-                          Hiệu</label>
+                        <input type="text" id="form3Example4cd" class="form-control" name="th" /> <label class="form-label" for="form3Example4cd">Thương Hiệu</label>
                       </div>
                     </div>
 
                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                      <button type="submit" name="action" value="update" class="btn btn-primary btn-lg">Cập
-                        nhật</button>
+                      <button type="submit" name="action" value="add" class="btn btn-primary btn-lg">Thêm</button>
                     </div>
 
                     <div class="text-center">
                       <p>
-                        <a href="home.php">Trở về</a>
+                        <a href="./home.php">Trở về</a>
                       </p>
                     </div>
 
                   </form>
-
-                </div>
-                <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-
-                  <img src="../public/<?php print $product['Anh'] ?>" class="img-fluid" alt="Sample image">
 
                 </div>
               </div>

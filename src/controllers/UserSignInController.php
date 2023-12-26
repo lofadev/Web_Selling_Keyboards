@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
 include_once '../utils/connecting.php';
+include_once '../utils/functions.php';
 $username = $_POST['username'] ?? '';
 $password = $_POST['password'] ?? '';
 
@@ -18,7 +19,6 @@ if ($username == "admin" && $password == "admin") {
   $stmt->execute();
 
   $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
   if ($result) {
     $_SESSION['user'] = $result;
     header("Location: ../../index.php");

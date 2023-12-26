@@ -44,6 +44,7 @@ session_start();
     ?>
   </main>
 
+  <?php include 'src/components/SectionNew.php' ?>
   <?php include 'src/components/Footer.php' ?>
 
   <script src="public/js/jquery.min.js"></script>

@@ -135,6 +135,10 @@ main.content {
   z-index: 1 !important;
 }
 
+.search-form input[type="search"].search-field {
+  padding-right: 100px;
+}
+
 @media screen and (max-width: 1399.98px) {
   .product-card img {
     height: 268px !important;
